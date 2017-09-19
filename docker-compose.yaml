@@ -1,0 +1,61 @@
+# docker-compose configuration to build a complete local installation of the failmap platform.
+
+version: "3"
+services:
+  # message broker to distribute tasks
+  broker:
+    image: rabbitmq
+
+  # stateful storage
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+
+  # scan task executors, idempotent tasks that perform a scan with provided input and generate a result
+  worker-1:
+    build:
+      context: source/admin
+      dockerfile: ${PWD}/Dockerfile.worker
+    depends_on:
+      - broker
+    environment:
+      QUEUES: scan
+  worker-2:
+    build:
+      context: source/admin
+      dockerfile: ${PWD}/Dockerfile.worker
+    depends_on:
+      - broker
+    environment:
+      QUEUES: scan
+
+  # administrative task executer, these tasks require DB access, for example result parser, aggregators.
+  adminworker-1:
+    build:
+      context: source/admin
+      dockerfile: ${PWD}/Dockerfile.worker
+    depends_on:
+      - broker
+      - db
+    environment:
+      QUEUES: administrative
+
+  # administrative web interface and task initiator
+  admin-website:
+    build:
+      context: source/admin
+      dockerfile: ${PWD}/Dockerfile.admin
+    depends_on:
+      - broker
+      - db
+    ports:
+      - 8080:8080
+
+  # visitor facing, high performance frontend
+  website:
+    build:
+      context: source/admin
+      dockerfile: ${PWD}/Dockerfile.website
+    depends_on:
+      - db
