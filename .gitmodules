@@ -1,0 +1,4 @@
+[submodule "source/admin"]
+	path = source/admin
+	url = git@github.com:failmap/admin.git
+	branch = mapwebsite
