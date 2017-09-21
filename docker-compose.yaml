@@ -43,6 +43,7 @@ services:
       BROKER_URL: amqp://guest:guest@broker
       QUEUES: administrative
       DB_HOST: database
+      DB_ENGINE: mysql
       DB_USER: root
       DB_PASSWORD: secret
 
@@ -57,6 +58,7 @@ services:
     environment:
       BROKER_URL: amqp://guest:guest@broker
       DB_HOST: database
+      DB_ENGINE: mysql
       DB_USER: root
       DB_PASSWORD: secret
     ports:
@@ -71,6 +73,7 @@ services:
       - database
     environment:
       DB_HOST: database
+      DB_ENGINE: mysql
       DB_USER: readonly
       DB_PASSWORD: secret
     ports:
