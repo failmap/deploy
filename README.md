@@ -9,3 +9,5 @@ Requirements:
 # Quickstart
 
     docker-compose up
+
+Admin web interface should now be available on `http://localhost:8080` and the frontend website on `http://localhost:8081`.
