@@ -7,7 +7,7 @@ services:
     image: rabbitmq
 
   # stateful storage
-  db:
+  database:
     image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: secret
@@ -25,9 +25,10 @@ services:
     build:
       context: source/admin
       dockerfile: ${PWD}/Dockerfile.worker
-    depends_on:
+    links:
       - broker
     environment:
+      BROKER_URL: amqp://guest:guest@broker
       QUEUES: scan
 
   # administrative task executer, these tasks require DB access, for example result parser, aggregators.
@@ -35,20 +36,29 @@ services:
     build:
       context: source/admin
       dockerfile: ${PWD}/Dockerfile.worker
-    depends_on:
+    links:
       - broker
-      - db
+      - database
     environment:
+      BROKER_URL: amqp://guest:guest@broker
       QUEUES: administrative
+      DB_HOST: database
+      DB_USER: root
+      DB_PASSWORD: secret
 
   # administrative web interface and task initiator
   admin-website:
     build:
       context: source/admin
       dockerfile: ${PWD}/Dockerfile.admin
-    depends_on:
+    links:
       - broker
-      - db
+      - database
+    environment:
+      BROKER_URL: amqp://guest:guest@broker
+      DB_HOST: database
+      DB_USER: root
+      DB_PASSWORD: secret
     ports:
       - 8080:8080
 
@@ -57,7 +67,11 @@ services:
     build:
       context: source/admin
       dockerfile: ${PWD}/Dockerfile.website
-    depends_on:
-      - db
+    links:
+      - database
+    environment:
+      DB_HOST: database
+      DB_USER: readonly
+      DB_PASSWORD: secret
     ports:
       - 8081:8081
