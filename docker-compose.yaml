@@ -10,32 +10,39 @@ services:
   database:
     image: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-secret}"
+      MYSQL_DATABASE: "${DB_NAME:-failmap}"
+      MYSQL_USER: "${DB_USER:-user}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
 
   # scan task executors, idempotent tasks that perform a scan with provided input and generate a result
   worker-1:
+    image: failmap:admin
     build:
       context: source/admin
-      dockerfile: ${PWD}/Dockerfile.worker
+      dockerfile: "${PWD}/Dockerfile"
     depends_on:
       - broker
     environment:
       QUEUES: scan
   worker-2:
+    image: failmap:admin
     build:
       context: source/admin
-      dockerfile: ${PWD}/Dockerfile.worker
+      dockerfile: "${PWD}/Dockerfile"
     links:
       - broker
     environment:
       BROKER_URL: amqp://guest:guest@broker
       QUEUES: scan
+    command: [ "/usr/local/bin/failmap-admin", "worker" ]
 
   # administrative task executer, these tasks require DB access, for example result parser, aggregators.
   adminworker-1:
+    image: failmap:admin
     build:
       context: source/admin
-      dockerfile: ${PWD}/Dockerfile.worker
+      dockerfile: "${PWD}/Dockerfile"
     links:
       - broker
       - database
@@ -44,14 +51,17 @@ services:
       QUEUES: administrative
       DB_HOST: database
       DB_ENGINE: mysql
-      DB_USER: root
-      DB_PASSWORD: secret
+      DB_NAME: "${DB_NAME:-failmap}"
+      DB_NAME: "${DB_NAME:-failmap}"
+      DB_USER: "${DB_USER:-root}"
+    command: [ "/usr/local/bin/failmap-admin", "worker" ]
 
   # administrative web interface and task initiator
   admin-website:
+    image: failmap:admin
     build:
       context: source/admin
-      dockerfile: ${PWD}/Dockerfile.admin
+      dockerfile: "${PWD}/Dockerfile"
     links:
       - broker
       - database
@@ -59,22 +69,31 @@ services:
       BROKER_URL: amqp://guest:guest@broker
       DB_HOST: database
       DB_ENGINE: mysql
-      DB_USER: root
-      DB_PASSWORD: secret
+      DB_NAME: "${DB_NAME:-failmap}"
+      DB_USER: "${DB_USER:-user}"
+      DB_PASSWORD: "${DB_PASSWORD:-secret}"
     ports:
       - 8080:8080
+    # django decides what to log based on type of console
+    tty: true
+    command: [ "/usr/local/bin/failmap-admin", "runserver", "0.0.0.0:8080" ]
 
   # visitor facing, high performance frontend
   website:
+    image: failmap:admin
     build:
       context: source/admin
-      dockerfile: ${PWD}/Dockerfile.website
+      dockerfile: "${PWD}/Dockerfile"
     links:
       - database
     environment:
       DB_HOST: database
       DB_ENGINE: mysql
-      DB_USER: readonly
-      DB_PASSWORD: secret
+      DB_NAME: "${DB_NAME:-failmap}"
+      DB_USER: "${DB_RO_USER:-user}"
+      DB_PASSWORD: "${DB_RO_PASSWORD:-secret}"
     ports:
       - 8081:8081
+    # django decides what to log based on type of console
+    tty: true
+    command: [ "/usr/local/bin/failmap-admin", "runserver", "0.0.0.0:8081" ]
