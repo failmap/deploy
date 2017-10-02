@@ -1,0 +1,21 @@
+# no version pinning for compose required atm.
+# env:
+  # DOCKER_COMPOSE_VERSION:
+
+before_install:
+  # debug logging
+  - docker-compose --version
+
+  # build and start the stack
+  - docker-compose up
+
+  # debug logging
+  - docker ps
+
+  # bootstrapping
+  - docker-compose run admin /usr/local/bin/failmap-admin migrate
+  - docker-compose run admin /usr/local/bin/failmap-admin loaddata testdata
+
+  # smoketest
+  - curl http://localhost:8081|grep MSPAINT.EXE
+  - curl http://localhost:8080/admin/login/ |grep id_username
