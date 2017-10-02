@@ -16,7 +16,7 @@ services:
       MYSQL_PASSWORD: "${DB_PASSWORD:-secret}"
 
   # scan task executors, idempotent tasks that perform a scan with provided input and generate a result
-  worker-1:
+  worker:
     image: failmap:admin
     build:
       context: source/admin
@@ -38,7 +38,7 @@ services:
     command: [ "/usr/local/bin/failmap-admin", "worker" ]
 
   # administrative task executer, these tasks require DB access, for example result parser, aggregators.
-  adminworker-1:
+  adminworker:
     image: failmap:admin
     build:
       context: source/admin
@@ -57,7 +57,7 @@ services:
     command: [ "/usr/local/bin/failmap-admin", "worker" ]
 
   # administrative web interface and task initiator
-  admin-website:
+  admin:
     image: failmap:admin
     build:
       context: source/admin

@@ -19,9 +19,9 @@ Bring up entire stack:
 
 Initialize the database, test data and user run:
 
-    docker-compose run admin-website /usr/local/bin/failmap-admin migrate
-    docker-compose run admin-website /usr/local/bin/failmap-admin loaddata testdata
-    docker-compose run admin-website /usr/local/bin/failmap-admin createsuperuser
+    docker-compose run admin /usr/local/bin/failmap-admin migrate
+    docker-compose run admin /usr/local/bin/failmap-admin loaddata testdata
+    docker-compose run admin /usr/local/bin/failmap-admin createsuperuser
 
 
 Admin web interface should now be available on `http://localhost:8080/admin/` and the frontend website on `http://localhost:8081`.
