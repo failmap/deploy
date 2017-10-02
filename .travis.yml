@@ -1,8 +1,3 @@
-# use version of docker with support for multistage builds
-addons:
-  packages:
-    - docker-ce
-
 # no version pinning for compose required atm.
 # env:
   # DOCKER_COMPOSE_VERSION:
