@@ -1,6 +1,6 @@
 # Failmap Deploy configuration
 
-This repository combines failmap components and resources to create different deploy/release scenarios.
+This repository combines failmap components and resources to create different development/deploy/release scenarios.
 
 Requirements:
 
