@@ -14,7 +14,7 @@ WORKDIR /
 ENV UWSGI_GID root
 ENV UWSGI_UID root
 ENV UWSGI_MODULE failmap_admin.wsgi
-ENV UWSGI_STATIC_MAP /static=/usr/local/lib/python3.6/site-packages/failmap_admin/map/static
+ENV UWSGI_STATIC_MAP /static=/srv/failmap_admin/static
 
 RUN /usr/local/bin/failmap-admin collectstatic
 
