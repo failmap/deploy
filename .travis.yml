@@ -13,7 +13,7 @@ before_install:
   - docker ps
 
   # wait for db to be ready
-  - docker-compose exec database timeout 10 /bin/sh -c 'while ! mysql -uuser -psecret failmap -e "show tables";do sleep 1;done'
+  - docker-compose exec database timeout 30 /bin/sh -c 'while ! mysql -uuser -psecret failmap -e "show tables";do sleep 1;done'
 
   # bootstrapping
   - docker-compose run admin migrate
