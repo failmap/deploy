@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/failmap/deploy.svg?branch=master)](https://travis-ci.org/failmap/deploy)
+
 # Failmap Deploy configuration
 
 This repository combines failmap components and resources to create different development/deploy/release scenarios.
