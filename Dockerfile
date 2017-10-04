@@ -20,4 +20,4 @@ RUN /usr/local/bin/failmap-admin collectstatic
 
 ENTRYPOINT [ "/usr/local/bin/failmap-admin" ]
 
-CMD [ "runuwsgi" ]
+CMD [ "help" ]

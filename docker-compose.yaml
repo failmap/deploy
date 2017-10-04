@@ -35,7 +35,7 @@ services:
     environment:
       BROKER_URL: amqp://guest:guest@broker
       QUEUES: scan
-    command: [ "/usr/local/bin/failmap-admin", "worker" ]
+    command: [ "worker" ]
 
   # administrative task executer, these tasks require DB access, for example result parser, aggregators.
   adminworker:
@@ -54,7 +54,7 @@ services:
       DB_NAME: "${DB_NAME:-failmap}"
       DB_NAME: "${DB_NAME:-failmap}"
       DB_USER: "${DB_USER:-root}"
-    command: [ "/usr/local/bin/failmap-admin", "worker" ]
+    command: [ "worker" ]
 
   # administrative web interface and task initiator
   admin:
@@ -76,6 +76,7 @@ services:
       - 8080:8000
     # django decides what to log based on type of console
     tty: true
+    command: [ "runuwsgi" ]
 
   # visitor facing, high performance frontend
   website:
@@ -95,3 +96,4 @@ services:
       - 8081:8000
     # django decides what to log based on type of console
     tty: true
+    command: [ "runuwsgi" ]
