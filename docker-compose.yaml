@@ -73,10 +73,9 @@ services:
       DB_USER: "${DB_USER:-user}"
       DB_PASSWORD: "${DB_PASSWORD:-secret}"
     ports:
-      - 8080:8080
+      - 8080:8000
     # django decides what to log based on type of console
     tty: true
-    command: [ "/usr/local/bin/failmap-admin", "runserver", "0.0.0.0:8080" ]
 
   # visitor facing, high performance frontend
   website:
@@ -93,7 +92,6 @@ services:
       DB_USER: "${DB_RO_USER:-user}"
       DB_PASSWORD: "${DB_RO_PASSWORD:-secret}"
     ports:
-      - 8081:8081
+      - 8081:8000
     # django decides what to log based on type of console
     tty: true
-    command: [ "/usr/local/bin/failmap-admin", "runserver", "0.0.0.0:8081" ]

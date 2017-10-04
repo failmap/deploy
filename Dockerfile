@@ -10,4 +10,14 @@ RUN pip install --no-deps .
 
 WORKDIR /
 
-CMD [ "/usr/local/bin/failmap-admin" ]
+# configuration for django-uwsgi to work correct in Docker environment
+ENV UWSGI_GID root
+ENV UWSGI_UID root
+ENV UWSGI_MODULE failmap_admin.wsgi
+ENV UWSGI_STATIC_MAP /static=/usr/local/lib/python3.6/site-packages/failmap_admin/map/static
+
+RUN /usr/local/bin/failmap-admin collectstatic
+
+ENTRYPOINT [ "/usr/local/bin/failmap-admin" ]
+
+CMD [ "runuwsgi" ]
