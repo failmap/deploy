@@ -13,8 +13,8 @@ before_install:
   - docker ps
 
   # bootstrapping
-  - docker-compose run admin /usr/local/bin/failmap-admin migrate
-  - docker-compose run admin /usr/local/bin/failmap-admin loaddata testdata
+  - docker-compose run admin migrate
+  - docker-compose run admin loaddata testdata
 
   # smoketest
   - curl http://localhost:8081|grep MSPAINT.EXE
